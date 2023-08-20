@@ -1,5 +1,5 @@
 const contactsRoutes = require('express').Router();
-const contactController = require('../controllers/contacts.js');
+const contactController = require('../controllers/index.js');
 const isValidId = require("../middlewares/isValidId");
 
 
