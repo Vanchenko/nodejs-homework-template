@@ -6,19 +6,17 @@ require("dotenv").config();
 const { SECRET_KEY } = process.env;
 
 const authenticate = asyncHandler( async (req, res, next) => {
-    if (!req.headers.authorization) {
-        res.status(401);
-        throw HttpError(401, "Not authorized");
-    }
-    const [bearer, token] = req.headers.authorization.split(" ");
-    if (bearer !== "Bearer") { next(HttpError(401, "Not authorized")) }
+    const { authorization = "" } = req.headers;
+    const [bearer, token] = authorization.split(" ");
+    if (bearer !== "Bearer" || !token) { next(HttpError(401, "Not authorized")) }
     try {
         const { id } = jwt.verify(token, SECRET_KEY);
         const user = await userModel.findById(id);
-        if (!user) { throw HttpError(401, "Not authorized") };
+        if (!user || !user.token || user.token !== token) { next(HttpError(401, "Not authorized")) };
          req.user = user; 
         next();
-    } catch {
+    } catch (error) {
+        console.error(error);
         next(HttpError(401, "Not authorized"));
     }
 });

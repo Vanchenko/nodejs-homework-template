@@ -1,4 +1,4 @@
-const ContactModel = require('../../models/ContactModel');
+const { contactModel } = require('../../models/contactModel');
 const asyncHandler = require("express-async-handler");
 
 const getAll = asyncHandler(async (req, res) => {
@@ -12,7 +12,7 @@ const getAll = asyncHandler(async (req, res) => {
     if (favorite === "false") {
         getByCondition.favorite = false;
     }
-    const contacts = await ContactModel.find(getByCondition, "", {
+    const contacts = await contactModel.find(getByCondition, "", {
         skip,
         limit,
     });
