@@ -8,7 +8,8 @@ const add = asyncHandler(async (req, res) => {
         res.status(400);
         throw HttpError(400, 'Provide all fields data');
     }
-    const result = await ContactModel.create({ ...req.body });
+    const { _id } = req.user;
+    const result = await ContactModel.create({ ...req.body, owner: _id });
     res.status(201).json({
         code: 201,
         message: 'success',
