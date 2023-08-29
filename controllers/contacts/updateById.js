@@ -1,9 +1,14 @@
-const ContactModel = require('../../models/ContactModel');
+const { contactModel, schema } = require('../../models/contactModel');
 const asyncHandler = require("express-async-handler");
 const { HttpError } = require('../../helpers');
 
 const updateById = asyncHandler(async (req, res) => {
-    const result = await ContactModel.findByIdAndUpdate(
+    const { error } = schema.validate(req.body);
+    if (error) {
+        res.status(400);
+        throw HttpError(400, 'Provide all fields data');
+    }
+    const result = await contactModel.findByIdAndUpdate(
         req.params.contactId,
         { ...req.body },
         { new: true }
