@@ -20,7 +20,6 @@ const login = asyncHandler(async (req, res) => {
         id: user._id,
     };
 
-    console.log('SecrKey', SECRET_KEY);
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
     await userModel.findByIdAndUpdate(user._id, { token });
     res.json({
