@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 require("dotenv").config();
 const { userModel, registerSchema }  = require('../../models/user');
 const { HttpError } = require("../../helpers");
+const gravatar = require('gravatar');
 
 const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -17,7 +18,8 @@ const register = asyncHandler(async (req, res) => {
         throw HttpError(409, "Email already in use");
     }
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await userModel.create({ name, email, password: hashPassword });
+    const avatarURL = gravatar.url(email);
+    const newUser = await userModel.create({ name, email, password: hashPassword, avatarURL });
 
     res.status(201).json({
         user: {
